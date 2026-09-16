@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>IGNA RADIO</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #080808;
+    color: white;
+    min-height: 100vh;
+}
+
+header {
+    padding: 25px;
+    text-align: center;
+    background: linear-gradient(135deg, #111, #1c1c1c);
+    border-bottom: 1px solid #333;
+}
+
+.logo {
+    font-size: 42px;
+    font-weight: bold;
+}
+
+.subtitle {
+    color: #aaa;
+    margin-top: 5px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.card {
+    background: #121212;
+    border: 1px solid #292929;
+    border-radius: 20px;
+    padding: 35px;
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(0,0,0,.4);
+}
+
+.live {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: #222;
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+.live.online {
+    background: #182d1d;
+    color: #55e878;
+}
+
+button {
+    border: none;
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    font-size: 35px;
+    cursor: pointer;
+    margin: 25px;
+    background: white;
+    color: black;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+#status {
+    color: #aaa;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 30px;
+}
+
+.stat-number {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.stat-label {
+    color: #888;
+    font-size: 13px;
+}
+
+footer {
+    text-align: center;
+    color: #666;
+    padding: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">📻 IGNA RADIO</div>
+    <div class="subtitle">La radio automática con inteligencia artificial</div>
+</header>
+
+<div class="container">
+
+    <div class="card">
+
+        <div id="live" class="live">
+            ⚪ CONECTANDO...
+        </div>
+
+        <h1 id="program">IGNA RADIO</h1>
+
+        <p id="status">
+            Preparando transmisión...
+        </p>
+
+        <button id="play">▶</button>
+
+        <audio id="audio" controls preload="none" style="width:100%; max-width:600px;">
+        </audio>
+
+        <div class="stats">
+
+            <div>
+                <div id="listeners" class="stat-number">0</div>
+                <div class="stat-label">OYENTES</div>
+            </div>
+
+            <div>
+                <div class="stat-number">🔴</div>
+                <div class="stat-label">EN VIVO</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    IGNA RADIO © 2026
+</footer>
+
+<script>
+
+/*
+    IMPORTANTE:
+    Más adelante cambiaremos esta dirección
+    por la dirección pública de tu Icecast.
+*/
+
+const STREAM_URL = "http://TU-DIRECCION-PUBLICA:8000/igna.mp3";
+
+const audio = document.getElementById("audio");
+const button = document.getElementById("play");
+
+button.onclick = function() {
+
+    if (audio.paused) {
+
+        audio.src = STREAM_URL;
+
+        audio.play()
+            .then(() => {
+                button.textContent = "⏸";
+            })
+            .catch(() => {
+                alert("No se pudo conectar con IGNA RADIO.");
+            });
+
+    } else {
+
+        audio.pause();
+        button.textContent = "▶";
+
+    }
+
+};
+
+audio.onplay = function() {
+    button.textContent = "⏸";
+};
+
+audio.onpause = function() {
+    button.textContent = "▶";
+};
+
+</script>
+
+</body>
+</html>
