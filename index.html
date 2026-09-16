@@ -1,206 +1,420 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>IGNA RADIO</title>
+<title>IGNA RADIO — En Vivo</title>
 
 <style>
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #080808;
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255, 40, 40, .18), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(150, 0, 0, .15), transparent 30%),
+        #070707;
     color: white;
     min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Fondo animado */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
 }
 
 header {
-    padding: 25px;
-    text-align: center;
-    background: linear-gradient(135deg, #111, #1c1c1c);
-    border-bottom: 1px solid #333;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 7%;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(15px);
+    position: relative;
+    z-index: 2;
 }
 
 .logo {
-    font-size: 42px;
-    font-weight: bold;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 2px;
 }
 
-.subtitle {
-    color: #aaa;
-    margin-top: 5px;
-}
-
-.container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.card {
-    background: #121212;
-    border: 1px solid #292929;
-    border-radius: 20px;
-    padding: 35px;
-    text-align: center;
-    box-shadow: 0 15px 50px rgba(0,0,0,.4);
+.logo span {
+    color: #ff3030;
 }
 
 .live {
-    display: inline-block;
-    padding: 8px 15px;
-    border-radius: 20px;
-    background: #222;
-    color: #aaa;
-    margin-bottom: 20px;
-}
-
-.live.online {
-    background: #182d1d;
-    color: #55e878;
-}
-
-button {
-    border: none;
-    border-radius: 50%;
-    width: 90px;
-    height: 90px;
-    font-size: 35px;
-    cursor: pointer;
-    margin: 25px;
-    background: white;
-    color: black;
-}
-
-button:hover {
-    transform: scale(1.05);
-}
-
-#status {
-    color: #aaa;
-}
-
-.stats {
     display: flex;
-    justify-content: center;
-    gap: 50px;
-    margin-top: 30px;
-}
-
-.stat-number {
-    font-size: 25px;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
     font-weight: bold;
 }
 
-.stat-label {
+.live-dot {
+    width: 10px;
+    height: 10px;
+    background: #ff2020;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #ff2020;
+    animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+    50% {
+        transform: scale(1.5);
+        opacity: .5;
+    }
+}
+
+.hero {
+    width: min(1100px, 90%);
+    margin: 70px auto;
+    text-align: center;
+}
+
+.badge {
+    display: inline-block;
+    background: rgba(255, 30, 30, .12);
+    border: 1px solid rgba(255, 50, 50, .35);
+    color: #ff5555;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+h1 {
+    font-size: clamp(55px, 10vw, 110px);
+    line-height: .9;
+    letter-spacing: -5px;
+    font-weight: 900;
+}
+
+h1 span {
+    color: #ff3030;
+    text-shadow: 0 0 40px rgba(255,40,40,.35);
+}
+
+.subtitle {
+    margin-top: 25px;
+    color: #aaa;
+    font-size: 18px;
+}
+
+/* Reproductor */
+.player {
+    width: min(650px, 100%);
+    margin: 55px auto 0;
+    padding: 35px;
+    background: rgba(20,20,20,.75);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 28px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    backdrop-filter: blur(20px);
+}
+
+.cover {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 25px;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #ff2020, #5d0000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    font-weight: 900;
+    box-shadow: 0 0 50px rgba(255,30,30,.25);
+}
+
+.program {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.status {
     color: #888;
-    font-size: 13px;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.play {
+    width: 75px;
+    height: 75px;
+    margin: 30px auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: #ff3030;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 0 35px rgba(255,40,40,.35);
+    transition: .2s;
+}
+
+.play:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 50px rgba(255,40,40,.55);
+}
+
+audio {
+    display: none;
+}
+
+/* Visualizador */
+.visualizer {
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 15px;
+}
+
+.bar {
+    width: 5px;
+    height: 15px;
+    background: #ff3030;
+    border-radius: 5px;
+    animation: equalizer .8s infinite ease-in-out;
+}
+
+.bar:nth-child(2) { animation-delay: .1s; }
+.bar:nth-child(3) { animation-delay: .2s; }
+.bar:nth-child(4) { animation-delay: .3s; }
+.bar:nth-child(5) { animation-delay: .4s; }
+.bar:nth-child(6) { animation-delay: .2s; }
+.bar:nth-child(7) { animation-delay: .1s; }
+
+@keyframes equalizer {
+    50% {
+        height: 45px;
+    }
+}
+
+/* Tarjetas */
+.info {
+    width: min(1000px, 90%);
+    margin: 0 auto 80px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.card {
+    padding: 25px;
+    background: rgba(20,20,20,.65);
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 20px;
+}
+
+.card-title {
+    color: #888;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-value {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 footer {
     text-align: center;
-    color: #666;
     padding: 30px;
+    color: #555;
+    border-top: 1px solid rgba(255,255,255,.06);
+    font-size: 13px;
+}
+
+@media(max-width:700px) {
+    header {
+        padding: 0 5%;
+    }
+
+    .info {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        margin-top: 45px;
+    }
+
+    .player {
+        padding: 25px 18px;
+    }
 }
 </style>
+
 </head>
 
 <body>
 
 <header>
-    <div class="logo">📻 IGNA RADIO</div>
-    <div class="subtitle">La radio automática con inteligencia artificial</div>
+    <div class="logo">IGNA<span>RADIO</span></div>
+
+```
+<div class="live">
+    <div class="live-dot"></div>
+    EN VIVO
+</div>
+```
+
 </header>
 
-<div class="container">
+<main>
 
-    <div class="card">
+<section class="hero">
 
-        <div id="live" class="live">
-            ⚪ CONECTANDO...
-        </div>
+```
+<div class="badge">● TRANSMISIÓN ONLINE</div>
 
-        <h1 id="program">IGNA RADIO</h1>
+<h1>IGNA<span>RADIO</span></h1>
 
-        <p id="status">
-            Preparando transmisión...
-        </p>
+<p class="subtitle">
+    Música, tecnología, gaming y programas creados con IA.
+</p>
 
-        <button id="play">▶</button>
+<div class="player">
 
-        <audio id="audio" controls preload="none" style="width:100%; max-width:600px;">
-        </audio>
-
-        <div class="stats">
-
-            <div>
-                <div id="listeners" class="stat-number">0</div>
-                <div class="stat-label">OYENTES</div>
-            </div>
-
-            <div>
-                <div class="stat-number">🔴</div>
-                <div class="stat-label">EN VIVO</div>
-            </div>
-
-        </div>
-
+    <div class="cover">
+        IGNA
     </div>
 
+    <div class="program">
+        IGNA RADIO
+    </div>
+
+    <div class="status" id="status">
+        Listo para transmitir
+    </div>
+
+    <div class="visualizer">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+
+    <button class="play" id="play">
+        ▶
+    </button>
+
+    <audio id="radio" preload="none">
+        <source
+            src="http://TU-DIRECCION-PUBLICA:8000/igna.mp3"
+            type="audio/mpeg">
+    </audio>
+
+</div>
+```
+
+</section>
+
+<section class="info">
+
+```
+<div class="card">
+    <div class="card-title">Estado</div>
+    <div class="card-value" id="state">● Preparado</div>
 </div>
 
+<div class="card">
+    <div class="card-title">Emisora</div>
+    <div class="card-value">IGNA RADIO</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Contenido</div>
+    <div class="card-value">Música + IA</div>
+</div>
+```
+
+</section>
+
+</main>
+
 <footer>
-    IGNA RADIO © 2026
+    IGNA RADIO · Transmisión online · Hecho por Ignacio
 </footer>
 
 <script>
 
-/*
-    IMPORTANTE:
-    Más adelante cambiaremos esta dirección
-    por la dirección pública de tu Icecast.
-*/
+const radio = document.getElementById("radio");
+const play = document.getElementById("play");
+const status = document.getElementById("status");
+const state = document.getElementById("state");
 
-const STREAM_URL = "http://TU-DIRECCION-PUBLICA:8000/igna.mp3";
+play.addEventListener("click", async () => {
 
-const audio = document.getElementById("audio");
-const button = document.getElementById("play");
+    if (radio.paused) {
 
-button.onclick = function() {
+        try {
 
-    if (audio.paused) {
+            await radio.play();
 
-        audio.src = STREAM_URL;
+            play.textContent = "❚❚";
+            status.textContent = "Reproduciendo IGNA RADIO";
+            state.textContent = "● EN VIVO";
 
-        audio.play()
-            .then(() => {
-                button.textContent = "⏸";
-            })
-            .catch(() => {
-                alert("No se pudo conectar con IGNA RADIO.");
-            });
+        } catch (error) {
+
+            status.textContent =
+                "No se pudo conectar con la transmisión";
+
+            state.textContent = "● Sin conexión";
+
+        }
 
     } else {
 
-        audio.pause();
-        button.textContent = "▶";
+        radio.pause();
 
+        play.textContent = "▶";
+        status.textContent = "Transmisión pausada";
+        state.textContent = "● Pausado";
     }
 
-};
+});
 
-audio.onplay = function() {
-    button.textContent = "⏸";
-};
+radio.addEventListener("playing", () => {
+    status.textContent = "Reproduciendo IGNA RADIO";
+    state.textContent = "● EN VIVO";
+});
 
-audio.onpause = function() {
-    button.textContent = "▶";
-};
+radio.addEventListener("waiting", () => {
+    status.textContent = "Conectando con la radio...";
+});
+
+radio.addEventListener("error", () => {
+    status.textContent = "La transmisión no está disponible";
+    state.textContent = "● Sin conexión";
+});
 
 </script>
 
